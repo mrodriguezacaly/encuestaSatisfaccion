@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".fragments.Header">
+
+    <LinearLayout
+        android:backgroundTint="@color/blanco"
+        android:layout_marginTop="30dp"
+        android:padding="20dp"
+        android:gravity="center"
+        android:background="@drawable/border_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:background="@drawable/logo"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:backgroundTint="@color/blanco"
+                    android:background="@color/blanco"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:gravity="center"
+                        android:textAllCaps="true"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:id="@+id/nombAutopista"
+                        android:fontFamily="@font/changa"
+                        android:textColor="@color/negro"
+                        android:textStyle="bold"
+                        android:textSize="14dp"
+                        android:text="@string/encuestaCliente" />
+
+                </LinearLayout>
+
+                <!--
+            <LinearLayout
+                android:orientation="vertical"
+                android:backgroundTint="@color/blanco"
+                android:background="@color/blanco"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_marginLeft="65dp"
+                    android:fontFamily="@font/changa"
+                    android:textColor="@color/negro"
+                    android:textStyle="bold"
+                    android:textSize="12dp"
+                    android:text="F-PST-006"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>-->
+            </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</FrameLayout>
