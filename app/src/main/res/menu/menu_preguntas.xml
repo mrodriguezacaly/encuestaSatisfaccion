@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="navegacion"
+        android:icon="@drawable/ic_view_list_black_24dp"
+        app:itemIconSize="150dp"
+        app:showAsAction="ifRoom">
+      <menu>
+          <item
+              android:id="@+id/menuPreguntasPregAnte"
+              android:title="Pregunta Anterior"
+              app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/menuPreguntasMenu"
+            android:title="Menu principal"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/menuPreguntasCancelar"
+            android:title="Cancelar encuesta"
+            app:showAsAction="ifRoom" />
+      </menu>
+    </item>
+
+
+
+</menu>

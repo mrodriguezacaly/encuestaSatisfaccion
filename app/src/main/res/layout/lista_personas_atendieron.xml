@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/LIid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:visibility="invisible"
+        android:textColor="@color/azul"
+        android:layout_marginTop="1dp"
+        android:layout_alignParentTop="true"
+    />
+
+    <TextView
+        android:id="@+id/nombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/LIid"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_toStartOf="@+id/imaFirmPersAtend"
+        android:layout_toLeftOf="@+id/imaFirmPersAtend"
+        android:text="TextView"
+        android:textColor="@color/cafe" />
+
+    <TextView
+        android:id="@+id/puesto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_below="@+id/nombre"
+        android:layout_alignLeft="@+id/imaFirmPersAtend"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginEnd="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_toStartOf="@+id/imaFirmPersAtend"
+        android:layout_toLeftOf="@+id/imaFirmPersAtend"
+        android:text="TextView"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/imaFirmPersAtend"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="invisible"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        tools:srcCompat="@tools:sample/avatars" />
+
+
+</RelativeLayout>

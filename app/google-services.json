@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "119251075173",
+    "project_id": "encuestasatisfaccion-bcd3f",
+    "storage_bucket": "encuestasatisfaccion-bcd3f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119251075173:android:76683b54b20089bb7a468c",
+        "android_client_info": {
+          "package_name": "com.ideal.encuestaclientes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhSEkIroC3pBjrh6p3T3L0V-dZ-7iqM2k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

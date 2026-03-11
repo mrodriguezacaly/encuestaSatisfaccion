@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
+android {
+    compileSdk 36
+    namespace "com.ideal.encuestacliente"
+
+    defaultConfig {
+        applicationId "com.ideal.encuestaclientes"
+        minSdkVersion 24
+        targetSdkVersion 36
+        versionCode 23
+        versionName "19.4"
+
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            def localProperties = new Properties()
+            file("../local.properties").withInputStream { localProperties.load(it) }
+
+            def storeFilePath = localProperties.getProperty("storeFile")
+            storeFile file(storeFilePath)
+            storePassword localProperties.getProperty("storePassword")
+            keyAlias localProperties.getProperty("keyAlias")
+            keyPassword localProperties.getProperty("keyPassword")
+        }
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField "String", "SERVER", '"EncuestaSatisfaccion_qa"'
+            buildConfigField "String", "AUTH_SERVER", '"Autenticacion_qa"'
+            buildConfigField "String", "DIRECTORIO_WS", '"wsAPIformatos_qa"'
+        }
+
+        release {
+            buildConfigField "String", "SERVER", '"EncuestaSatisfaccion"'
+            buildConfigField "String", "AUTH_SERVER", '"Autenticacion"'
+            buildConfigField "String", "DIRECTORIO_WS", '"wsAPIformatos"'
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    testImplementation "junit:junit:${jUnitVersion}"
+    androidTestImplementation "androidx.test.ext:junit:${androidJUnitVersion}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${espressoCoreVersion}"
+
+    implementation "androidx.appcompat:appcompat:${appCompatVersion}"
+    implementation "com.google.android.material:material:${materialVersion}"
+    implementation "androidx.constraintlayout:constraintlayout:${constraintLayoutVersion}"
+
+    implementation "androidx.navigation:navigation-fragment:${navFragmentVersion}"
+    implementation "androidx.navigation:navigation-ui:${navUIVersion}"
+
+    implementation "androidx.cardview:cardview:${cardViewVersion}"
+    implementation "androidx.recyclerview:recyclerview:${recyclerViewVersion}"
+
+    implementation "com.google.android.gms:play-services-location:${mapsLocationVersion}"
+
+    implementation "com.google.firebase:firebase-core:${firebaseCoreVersion}"
+    implementation "com.google.firebase:firebase-messaging:${firebaseMessagingVersion}"
+    implementation "com.google.firebase:firebase-crashlytics:${firebaseCrashlyticsVersion}"
+
+    implementation "com.android.volley:volley:${volleyVersion}"
+    implementation "com.google.code.gson:gson:${gsonVersion}"
+    implementation "pl.droidsonroids.gif:android-gif-drawable:${androidGifVersion}"
+}
