@@ -49,6 +49,7 @@ import com.ideal.encuestacliente.vistas.ui.components.dialogs.CustomAlertDialog;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //copiaBD();
         init();
         actions();
         consultaCatalogos();
@@ -568,5 +569,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
         );
+    }
+
+    private void copiaBD() {
+
+        BaseDaoEncuesta dbHelper = new BaseDaoEncuesta(this);
+
+        try {
+
+            dbHelper.copyDatabaseFromAssets(this,"EncuestClienteIdealeunodocetrecea");
+
+            dbHelper.logTablesFromPath(this,"EncuestClienteIdealeunodocetrecea");
+
+            dbHelper.logTablesFromCurrentDb();
+
+            // 🔎 verificar registros
+            dbHelper.logTableRowCounts();
+
+        } catch (IOException e) {
+
+            Log.e("IOException","Error copiando BD",e);
+
+        }
     }
 }

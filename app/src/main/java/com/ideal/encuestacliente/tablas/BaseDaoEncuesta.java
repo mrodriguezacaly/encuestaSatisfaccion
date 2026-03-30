@@ -22,6 +22,11 @@ import com.ideal.encuestacliente.model.Esatis_Valoracion;
 import com.ideal.encuestacliente.model.Usuario;
 import com.ideal.encuestacliente.sincronizacion.AplicationController;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +36,7 @@ public class BaseDaoEncuesta extends SQLiteOpenHelper {
 
 	private static final int OLD_VERSION = 7;
 	private static final int   DATABASE_VERSION = 8;
-	public static final String DATABASE_NAME = "EncuestClienteIdealeunodocetrecea.db";
+	public static final String DATABASE_NAME = "EncuestClienteIdealeunodocetrecea";
 
 	public static synchronized BaseDaoEncuesta getInstance()
 	{
@@ -1945,6 +1950,157 @@ public class BaseDaoEncuesta extends SQLiteOpenHelper {
 
 	}
 
+    public void copyDatabaseFromAssets(Context context, String dbName) throws IOException {
+        File dbFile = context.getDatabasePath(dbName);
+        File dbDir = dbFile.getParentFile();
 
+        if (dbDir != null && !dbDir.exists()) {
+            boolean created = dbDir.mkdirs();
+            Log.d("DB_COPY", "Carpeta creada: " + created + " -> " + dbDir.getAbsolutePath());
+        }
+
+        if (dbFile.exists()) {
+            boolean deleted = dbFile.delete();
+            Log.d("DB_COPY", "BD previa eliminada: " + deleted + " -> " + dbFile.getAbsolutePath());
+        }
+
+        InputStream inputStream = context.getAssets().open(dbName);
+        OutputStream outputStream = new FileOutputStream(dbFile);
+
+        byte[] buffer = new byte[8192];
+        int length;
+        long total = 0;
+
+        while ((length = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, length);
+            total += length;
+        }
+
+        outputStream.flush();
+        outputStream.close();
+        inputStream.close();
+
+        Log.d("DB_COPY", "BD copiada: " + dbFile.getAbsolutePath());
+        Log.d("DB_COPY", "Bytes copiados: " + total);
+        Log.d("DB_COPY", "Tamaño final archivo: " + dbFile.length());
+    }
+
+
+    public void logTablesFromCurrentDb() {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+
+        try {
+            db = this.getReadableDatabase();
+
+            Log.d("DB_CHECK", "Ruta BD abierta: " + db.getPath());
+
+            cursor = db.rawQuery(
+                    "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name",
+                    null
+            );
+
+            int count = 0;
+            while (cursor.moveToNext()) {
+                String tableName = cursor.getString(0);
+                Log.d("DB_CHECK", "Tabla: " + tableName);
+                count++;
+            }
+
+            Log.d("DB_CHECK", "Total tablas encontradas: " + count);
+
+        } catch (Exception e) {
+            Log.e("DB_CHECK", "Error listando tablas", e);
+        } finally {
+            if (cursor != null) cursor.close();
+            if (db != null) db.close();
+        }
+    }
+
+    public void logTablesFromPath(Context context, String dbName) {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+
+        try {
+            File dbFile = context.getDatabasePath(dbName);
+            Log.d("DB_FILE", "Revisando archivo: " + dbFile.getAbsolutePath());
+            Log.d("DB_FILE", "Existe: " + dbFile.exists());
+            Log.d("DB_FILE", "Tamaño: " + dbFile.length());
+
+            db = SQLiteDatabase.openDatabase(
+                    dbFile.getAbsolutePath(),
+                    null,
+                    SQLiteDatabase.OPEN_READONLY
+            );
+
+            cursor = db.rawQuery(
+                    "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name",
+                    null
+            );
+
+            int count = 0;
+            while (cursor.moveToNext()) {
+                String tableName = cursor.getString(0);
+                Log.d("DB_FILE", "Tabla archivo: " + tableName);
+                count++;
+            }
+
+            Log.d("DB_FILE", "Total tablas en archivo: " + count);
+
+        } catch (Exception e) {
+            Log.e("DB_FILE", "Error revisando archivo", e);
+        } finally {
+            if (cursor != null) cursor.close();
+            if (db != null) db.close();
+        }
+    }
+
+    public void logTableRowCounts() {
+
+        SQLiteDatabase db = null;
+        Cursor tablesCursor = null;
+        Cursor countCursor = null;
+
+        try {
+
+            db = this.getReadableDatabase();
+
+            tablesCursor = db.rawQuery(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'",
+                    null
+            );
+
+            while (tablesCursor.moveToNext()) {
+
+                String tableName = tablesCursor.getString(0);
+
+                countCursor = db.rawQuery(
+                        "SELECT COUNT(*) FROM " + tableName,
+                        null
+                );
+
+                if (countCursor.moveToFirst()) {
+
+                    int total = countCursor.getInt(0);
+
+                    Log.d("DB_ROWS", tableName + " -> " + total + " registros");
+
+                }
+
+                countCursor.close();
+                countCursor = null;
+            }
+
+        } catch (Exception e) {
+
+            Log.e("DB_ROWS", "Error contando registros", e);
+
+        } finally {
+
+            if (countCursor != null) countCursor.close();
+            if (tablesCursor != null) tablesCursor.close();
+            if (db != null) db.close();
+        }
+    }
 
 }
