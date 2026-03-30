@@ -133,7 +133,7 @@ public class SyncUpActivity extends AppCompatActivity {
         btnRegresar = findViewById(R.id.btnRegresar);
         contexto = this;
 
-        showUserData();
+        //showUserData();
     }
 
     private void actionControls(){
