@@ -83,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         actions();
         consultaCatalogos();
         notificationsPermission();
+        // trigger CI
+
     }
 
     public void sincronizaCatalogos() {
