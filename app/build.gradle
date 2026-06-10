@@ -20,13 +20,22 @@ android {
     signingConfigs {
         release {
             def localProperties = new Properties()
-            file("../local.properties").withInputStream { localProperties.load(it) }
+            def localPropertiesFile = file("../local.properties")
 
-            def storeFilePath = localProperties.getProperty("storeFile")
-            storeFile file(storeFilePath)
-            storePassword localProperties.getProperty("storePassword")
-            keyAlias localProperties.getProperty("keyAlias")
-            keyPassword localProperties.getProperty("keyPassword")
+            if (localPropertiesFile.exists()) {
+                localProperties.load(new FileInputStream(localPropertiesFile))
+
+                def storeFilePath = localProperties.getProperty("storeFile")
+                if (storeFilePath != null) {
+                    storeFile file(storeFilePath)
+                }
+
+                storePassword localProperties.getProperty("storePassword")
+                keyAlias localProperties.getProperty("keyAlias")
+                keyPassword localProperties.getProperty("keyPassword")
+            } else {
+                println("⚠️ local.properties no encontrado (CI), se omite firma release")
+            }
         }
     }
 
@@ -44,7 +53,11 @@ android {
 
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+
+            // ⚠️ Solo aplica signing si existe config
+            if (signingConfigs.release.storeFile != null) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }
