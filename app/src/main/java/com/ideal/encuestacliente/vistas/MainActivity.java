@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         consultaCatalogos();
         notificationsPermission();
         // trigger CI
-
+// trigger CI master
     }
 
     public void sincronizaCatalogos() {
