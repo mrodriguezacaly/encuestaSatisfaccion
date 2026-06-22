@@ -38,6 +38,7 @@ import com.ideal.encuestacliente.R;
 import com.ideal.encuestacliente.configuracion.CoordenadasGps;
 import com.ideal.encuestacliente.configuracion.SQLite;
 import com.ideal.encuestacliente.configuracion.Utils;
+import com.ideal.encuestacliente.controladores.LoginManager;
 import com.ideal.encuestacliente.controladores.permissions.NotificationsPermissionManager;
 import com.ideal.encuestacliente.sincronizacion.GenericRequest;
 import com.ideal.encuestacliente.sincronizacion.Urls;
@@ -460,52 +461,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.buttonAutenticar:
                 Log.e("pasa", "Login");
+
                 try {
+                    // ✅ NUEVO: usar LoginManager
+                    LoginManager loginManager = new LoginManager();
+
+                    String usuario = textInputEditTextUsuario.getText().toString();
+                    String password = textInputEditTextPassword.getText().toString();
+
+                    // ✅ 1. Validar campos
+                    if (!loginManager.validarCampos(usuario, password)) {
+                        textViewLogin.setText("Campos inválidos");
+                        textViewLogin.setVisibility(View.VISIBLE);
+
+                        textViewLogin.postDelayed(() ->
+                                textViewLogin.setVisibility(View.GONE), 3000);
+
+                        return;
+                    }
+
+                    // ✅ 2. Construir JSON
                     final JSONObject json = new JSONObject();
-                    json.put(getString(R.string.usuario), textInputEditTextUsuario.getText().toString());
-                    json.put(getString(R.string.password), textInputEditTextPassword.getText().toString());
+                    json.put(getString(R.string.usuario), usuario);
+                    json.put(getString(R.string.password), password);
                     json.put(getString(R.string.idFormato), 19);
+
+                    // ✅ 3. Llamada a API
                     GenericRequest.requestPost(Urls.URL_AUTENTICACION, json, new VolleyCallback() {
+
                         @Override
                         public void onSucces(JSONObject jsonObject) {
-                            /*try{
-                                boolean acceso = jsonObject.getBoolean(getString(R.string.estatusAcceso));
-                                if(acceso) {
-                                    if(alertDialogLogin.isShowing())
-                                        alertDialogLogin.dismiss();
-                                    new conectividadCSVTask().execute("");
-                                }
-                                else{
-                                    textViewLogin.setVisibility(View.VISIBLE);
-                                    textViewLogin.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            textViewLogin.setVisibility(View.GONE);
-                                        }},3000);
-                                }
-                            }catch (Exception e){ Log.e("",e.getMessage()); }*/
                             try {
                                 boolean acceso = jsonObject.getBoolean(getString(R.string.estatusAcceso));
+
                                 if (acceso) {
+
+                                    // ✅ Guardar usuario
                                     if (!UsuariosDb.exists()) {
-                                        UsuariosDb.save(json.getString(getString(R.string.usuario)), json.getString(getString(R.string.password)));
+                                        UsuariosDb.save(usuario, password);
                                     } else {
-                                        UsuariosDb.update(json.getString(getString(R.string.usuario)), json.getString(getString(R.string.password)));
+                                        UsuariosDb.update(usuario, password);
                                     }
+
                                     if (alertDialogLogin.isShowing())
                                         alertDialogLogin.dismiss();
+
                                     startActivity(new Intent(MainActivity.this, DescargaCatalogosActivity.class));
+
                                 } else {
+                                    textViewLogin.setText("Usuario o contraseña incorrecta");
                                     textViewLogin.setVisibility(View.VISIBLE);
-                                    textViewLogin.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            textViewLogin.setVisibility(View.GONE);
-                                        }
-                                    }, 3000);
+
+                                    textViewLogin.postDelayed(() ->
+                                            textViewLogin.setVisibility(View.GONE), 3000);
                                 }
+
                             } catch (Exception e) {
-                                Log.e("", e.getMessage());
+                                Log.e("LOGIN_ERROR", e.getMessage());
                             }
                         }
 
@@ -513,17 +525,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onFail(VolleyError error) {
                             textViewLogin.setText(getString(R.string.errorServidor));
                             textViewLogin.setVisibility(View.VISIBLE);
-                            textViewLogin.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    textViewLogin.setVisibility(View.GONE);
-                                }
-                            }, 3000);
+
+                            textViewLogin.postDelayed(() ->
+                                    textViewLogin.setVisibility(View.GONE), 3000);
                         }
                     });
+
                 } catch (Exception e) {
-                    Log.e("", e.getMessage());
+                    Log.e("LOGIN_ERROR", e.getMessage());
                 }
+
                 break;
         }
     }
